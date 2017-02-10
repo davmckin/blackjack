@@ -4,57 +4,66 @@ require 'tty'
 
 class Game
 
-attr_accessor :shoe, :player_hand, :dealer_hand, :prompt
+attr_accessor :deck,
+              :player_hand,
+              :dealer_hand,
+              :prompt
 
-  def initialize
-    @shoe = Deck.new
-    @player_hand = [].inject(:+)
-    @dealer_hand = [].inject(:+)
+  def initialize(deck = Deck.new)
+    @deck = Deck.new
+    @player_hand = []
+    @dealer_hand = []
     @prompt = TTY::Prompt.new
     2.times do
-      @player_hand << deck.draw
-      @dealer_hand << deck.draw
+      @player_hand << hit
+      @dealer_hand << hit
     end
   end
+end
 
-  def play
-    until  player_hand >= 21 || stay
-      player_turn
-      hit
-      dealer_turn
-    end
-    game_over
+def play
+  until player_hand == 21
+    player_turn
+  end                   #needs bust method, show dealer card before first hit
+  dealer_turn
+end
+
+def player_turn
+  puts "You have:"
+  player_hand.each do |card|
+    puts card
+  end
+  desire = prompt.yes?("Would you like to hit? y/n")
+  if desire.downcase == 'y'
+    player_hand << hit
+    play
+  else
+    dealer_turn
+  end
+end
+
+  def hit
+    new_card = deck.shift
+    new_card
   end
 
-  def player_turn
-    puts "You have:"
-    player_hand.each do |card|
-      puts card
-    end
+def dealer_turn
+  until dealer_hand > 15
+    dealer_hand << hit
   end
+  game_over
+end
 
-    def hit
-      desire = prompt.yes?("Would you like another card?")
-      if desire
-        #move a card from the deck into the player_hand.
-      else
-        dealer_turn
-      end
-    end
-
-  def dealer_turn
-    if dealer_hand > 15
-      game_over
-    else
-      hit
-    end
+def game_over
+  if player_hand > 21
+    puts "you lose"
+  elsif player_hand == dealer_hand
+    puts "you win"
+  elsif player_hand > dealer_hand
+    puts "you win"
+  else
+    puts "you lose"
   end
+end
 
-  def game_over
-    if dealer_hand >= player_hand && dealer_hand != > 21
-      puts "You lost."
-    else
-      puts "YOU WON!"
-    end
-
-  end
+Game.new.play
