@@ -9,19 +9,17 @@ attr_accessor :deck,
               :dealer_hand,
               :prompt
 
-  def initialize(deck = Deck.new)
+  def initialize
     @deck = Deck.new
     @player_hand = []
     @dealer_hand = []
     @prompt = TTY::Prompt.new
-    2.times do
-      @player_hand << hit
-      @dealer_hand << hit
-    end
+    @player_hand << @deck.cards.shift(2)
+    @dealer_hand << @deck.cards.shift(2)
   end
-end
 
 def play
+  player_hand
   until player_hand == 21
     player_turn
   end                   #needs bust method, show dealer card before first hit
@@ -34,7 +32,7 @@ def player_turn
     puts card
   end
   desire = prompt.yes?("Would you like to hit? y/n")
-  if desire.downcase == 'y'
+  if desire == 'y'
     player_hand << hit
     play
   else
@@ -42,13 +40,16 @@ def player_turn
   end
 end
 
-  def hit
-    new_card = deck.shift
-    new_card
-  end
+def hit
+  deck.shift
+end
 
 def dealer_turn
-  until dealer_hand > 15
+  dealer_total = 0
+  dealer_hand.each do |card|
+    card.value +dealer_total
+  end
+  until dealer_total > 15
     dealer_hand << hit
   end
   game_over
@@ -64,6 +65,8 @@ def game_over
   else
     puts "you lose"
   end
+end
+
 end
 
 Game.new.play

@@ -6,8 +6,8 @@ class Deck
 
   def initialize
     @cards = []
-    suits = %w(hearts diamonds spades clubs)
-    suits.each do |s|
+    @suits = %w(hearts diamonds spades clubs)
+    @suits.each do |s|
       (2..14).each do |f|
         @cards << Card.new(f, s)
       end
