@@ -24,7 +24,6 @@ def play
   until player_hand.inject(0) {|sum, card| sum + card.value} >= 21 do player_turn
   end
   dealer_turn
-  compare
 end
 
 def player_turn
@@ -41,22 +40,19 @@ def player_turn
 end
 
 def dealer_turn
-  dealer_total = 0
-  dealer_hand.each do |card|
-    card.value + dealer_total
-  end
-  until dealer_total > 15
+  dealer_hand.inject(0) {|sum, card| sum + card.value}
+  until dealer_hand.inject(0) {|sum, card| sum + card.value} > 15
     dealer_hand << deck.cards.shift
   end
   game_over
 end
 
 def game_over
-  if player_hand > 21
+  if player_hand.inject(0) {|sum, card| sum + card.value} > 21
     puts "you lose"
-  elsif player_hand == dealer_hand
+  elsif player_hand.inject(0) {|sum, card| sum + card.value} == dealer_hand.inject(0) {|sum, card| sum + card.value}
     puts "you win"
-  elsif player_hand > dealer_hand
+  elsif player_hand.inject(0) {|sum, card| sum + card.value} > dealer_hand.inject(0) {|sum, card| sum + card.value}
     puts "you win"
   else
     puts "you lose"
