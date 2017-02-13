@@ -6,17 +6,20 @@ class Deck
 
   def initialize
     @cards = []
-    @suits = %w(hearts diamonds spades clubs)
-    @suits.each do |s|
-      (2..14).each do |f|
-        @cards << Card.new(f, s)
+    Card.suits.each do |s|
+      Card.faces.each do |f|
+        cards << Card.new(f, s)
       end
     end
-    shuffle
+    shuffle!
   end
 
-  def shuffle
-    self.cards.shuffle!
+  def draw
+    @cards.shift
+  end
+
+  def shuffle!
+    cards.shuffle!
   end
 
 end

@@ -1,31 +1,33 @@
 class Card
 
-include Comparable
+  include Comparable
 
-  attr_accessor  :suit, :face, :value
-
-  def initialize (value, suit)
-   @value = value
-   @suit = suit
-   @face = value.to_s
+  def self.faces
+    ("2".."10").to_a + %w(J Q K A)
   end
 
- def face=(value)
-   if @face == 11
-    then "Jack"
-   elsif @face == 12
-    then "Queen"
-   elsif @face == 13
-    then "King"
-   elsif @face == 14
-    then "Ace"
-   else
-    value
-   end
- end
+  def self.suits
+    %w(Clubs Diamonds Hearts Spades)
+  end
+
+  attr_accessor :suit, :face, :value
+
+  def initialize(face, suit)
+    @suit = suit
+    @face = face.to_s
+    @value = find_value
+  end
+
+  def find_value
+    if face.to_i != 0
+      then face.to_i
+    elsif face == "Ace" then 11
+    else 10
+    end
+  end
 
   def +(other)
-    value + other.value
+      value + other.value
   end
 
   def <=>(other)
@@ -34,6 +36,10 @@ include Comparable
     else
       super(other)
     end
+  end
+
+  def to_s
+    "a #{face} of #{suit}"
   end
 
 end
