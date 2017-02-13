@@ -18,11 +18,12 @@ class Card
     @value = find_value
   end
 
+  #changed if statement to case statement
   def find_value
-    if face.to_i != 0
-      then face.to_i
-    elsif face == "Ace" then 11
-    else 10
+    case
+      when face.to_i != 0 then face.to_i
+      when face == "A" then 11
+      else 10
     end
   end
 
