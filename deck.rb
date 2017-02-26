@@ -11,7 +11,7 @@ class Deck
         cards << Card.new(f, s)
       end
     end
-    shuffle!
+    self.shuffle!
   end
 
   def draw
